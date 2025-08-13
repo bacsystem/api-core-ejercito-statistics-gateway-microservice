@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<Configuration status="WARN" monitorInterval="30">
+    <Properties>
+        <Property name="LOG_FILE_NAME">api-core-ejercito-statistics-gateway-microservice</Property>
+        <Property name="LOG_FOLDER">/logs</Property>
+        <Property name="LOG_PATTERN_CONSOLE">%blue{%d}[%magenta{%-36X{requestId}}][%highlight{%-6p}][%red{api-core-ejercito-statistics-gateway-microservice}][%X{method}%cyan{%-33.33c{1}][#%L]:} %highlight{%m}%n</Property>
+        <Property name="LOG_PATTERN_FILE">%blue{%d}[%magenta{%-36X{requestId}}][%highlight{%-6p}][%red{api-core-ejercito-statistics-gateway-microservice|}][%X{method}%cyan{%-33.33c{1}][#%L]:} %highlight{%m}%n</Property>
+    </Properties>
+    <Appenders>
+        <Console name="Console" target="SYSTEM_OUT">
+            <PatternLayout pattern="${LOG_PATTERN_CONSOLE}"/>
+        </Console>
+        <RollingFile name="fileApiLog" fileName="${LOG_FOLDER}/${LOG_FILE_NAME}.log" filePattern="${LOG_FOLDER}/${LOG_FILE_NAME}-debug-backup-%d{yyyy-MM-dd}-%i.log">
+            <LevelRangeFilter minLevel="FATAL" maxLevel="TRACE" onMatch="ACCEPT" onMismatch="DENY"/>
+            <PatternLayout pattern="${LOG_PATTERN_FILE}"/>
+            <Policies>
+                <SizeBasedTriggeringPolicy size="4MB"/>
+            </Policies>
+            <DefaultRolloverStrategy max="10"/>
+        </RollingFile>
+         <Async name="Async">
+             <AppenderRef ref="fileApiLog"/>
+         </Async>
+    </Appenders>
+    <Loggers>
+        <Root level="INFO">
+            <AppenderRef ref="Console"/>
+            <AppenderRef ref="Async"/>
+        </Root>
+    </Loggers>
+</Configuration>

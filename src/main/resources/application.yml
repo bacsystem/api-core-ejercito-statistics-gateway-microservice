@@ -1,0 +1,101 @@
+#server configuration:
+server:
+  port: 8002
+  compression:
+    enabled: false
+    mime-types: text/html,text/css,application/javascript,application/json
+    min-response-size: 1024
+  tomcat:
+    uri-encoding: UTF-8
+  error:
+    include-message: never
+
+#spring configuration:
+spring:
+  webflux:
+  #  base-path: /api
+  application:
+    name: api-core-ejercito-statistics-gateway-microservice
+    version: 1.0.0
+  messages:
+    encoding: UTF-8
+  version: v2.7.1
+  main:
+    banner-mode: log
+    lazy-initialization: false
+  mvc:
+    path-match:
+      matching-strategy: ant_path_matcher
+    converters:
+      preferred-json-mapper: jsonb
+
+  #cloud routes gateway
+  cloud:
+    gateway:
+      routes:
+
+        - id: api-core-ejercito-statistics-security-microservice
+          uri: lb://api-core-ejercito-statistics-security-microservice
+          predicates:
+            - Path=/api/security/**
+          filters:
+            - StripPrefix=2
+
+        - id: api-core-ejercito-statistics-dependencies-microservice
+          uri: lb://api-core-ejercito-statistics-dependencies-microservice
+          predicates:
+            - Path=/api/dependencies/**
+          filters:
+            - StripPrefix=2
+
+        - id: api-core-ejercito-statistics-microservice
+          uri: lb://api-core-ejercito-statistics-microservice
+          predicates:
+            - Path=/api/statistics/**
+          filters:
+            - StripPrefix=2
+
+        - id: api-core-ejercito-statistics-reports-microservice
+          uri: lb://api-core-ejercito-statistics-reports-microservice
+          predicates:
+            - Path=/api/reports/**
+          filters:
+            - StripPrefix=2
+
+#logging configuration
+logging:
+  level:
+    root: ${LOGGING_CONFIGURATION_APP:info}
+
+#developer configuration:
+developer:
+  nickname: cbacilio
+
+#microservice configuration:
+microservice:
+  key: 4ac557e8-8893-430e-a834-894e7a290573
+  secret-key: 5367566B59703373367639792F423F4528482B4D6251655468576D5A71347437
+  authorities-value: authorities
+  bearer-key: "Bearer "
+  datasource:
+    name: microservice.datasource.ep.solutions
+    encryption-enable: true
+    encryption-key: true
+  configuration:
+    domain: http://localhost:8080
+    type: microservice.configuration.type.json.file
+  error-handler: ERROR_HANDLER_LINK_NOT_DEFINED
+  messages:
+    path: "/json/messages.json"
+    index: "01"
+
+# Health Configuration
+management:
+  health:
+    db:
+      enabled: false
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+

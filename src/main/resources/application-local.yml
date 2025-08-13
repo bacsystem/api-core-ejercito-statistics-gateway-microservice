@@ -1,0 +1,8 @@
+#cloud configuration
+eureka:
+  client:
+    service-url:
+      defaultZone: http://localhost:8761/eureka
+  instance:
+    instance-id: ${spring.application.name}:${spring.application.instance-id:${random.value}}
+

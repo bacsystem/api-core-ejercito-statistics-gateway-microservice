@@ -1,0 +1,8 @@
+#cloud configuration
+eureka:
+  client:
+    service-url:
+      defaultZone: ${API_CORE_EJERCITO_STATISTICS_EUREKA_MICROSERVICE}
+  instance:
+    instance-id: ${spring.application.name}:${spring.application.instance-id:${random.value}}
+
